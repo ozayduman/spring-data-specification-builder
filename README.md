@@ -4,7 +4,7 @@ This library simplifies writing type-safe queries for search screens by using `S
 As you might know foreach query screen you have to pass a specific DTO (Data Transfer Objects) and write specific queries using that DTO.
 This leads to boiler-plate, useless, repetitive code. By using this library you can get rid of that kind of code, and write fluent-style dynamic queries driven by client-side easily.
 
-####FEATURES
+#### FEATURES
 * Client-Side driven dynamic query generation by using fluent style programming.
 * You can use different properties for the client and the server-side. This feature enables us not to expose domain entities to external world directly.
 * You can restrict, and open individual properties for query operations. 
@@ -26,7 +26,7 @@ This leads to boiler-plate, useless, repetitive code. By using this library you 
   * is false: `FALSE`
 * You can use all these operators in joins if needed as well.
    
-####HOW TO USE
+#### HOW TO USE
 Just add the following maven dependency to your pom.xml file. 
 ````
 <dependency>
@@ -35,9 +35,9 @@ Just add the following maven dependency to your pom.xml file.
     <version>0.0.1</version>
 </dependency>
 ````
-####USAGE
+#### USAGE
 
-####Server-side
+#### SERVER-SIDE
 by using bind method you can enable properties to be used in dynamic query generation. Client is allowed to use the properties only bound via bind method.
 if DTO properties are different from the entity properties then you have to specify it as the first argument of the bind method e.g. `bind("employeeName", Employee_.name)`. Otherwise, you can fell free to omit it e.g. `bind("Employee_.name)`.
 
@@ -69,7 +69,7 @@ final Specification<Employee> specification = SpecificationBuilder.<Employee>of(
 ```
 For joins, you should use `bindJoin` instead e.g. `bindJoin("phoneNumber", Employee_.phones, Phone_.number)` or `bindJoin(Employee_.phones, Phone_.number)`
 You can add custom specifications by using `bindCustom` method
-####PAGINATION
+#### PAGINATION
 For returning query results page by page you should pass sort information via `PageRequestDTO` instead of `CriteriaDTO` and then use PageRequestBuilder as follows:
 ````
   final Specification<Employee> specification = SpecificationBuilder.<Employee>of(pageRequestDTO)
@@ -101,7 +101,7 @@ If you don't want to use map struct library, you can write it explicitly as foll
 
 ````
 
-####Client-side
+#### CLIENT-SIDE
 On the client side you should pass the property, its value, and operation that will be used in the query generation.   
 Notice that some operators take no arguments (e.g. NULL, NOT_NULL, TRUE), some takes single, multiple values or range values as operands.
 So, you should follow the constraints of each operator described below:
@@ -187,10 +187,10 @@ Sort order, requested page, and page size information can be passed as follows:
   "size": 10
 }
 ````
-####HOW TO BUILD
+#### HOW TO BUILD
 * Executing tests: `./mvn test` (test reports: [./build/reports/tests/test/index.html](./build/reports/tests/test/index.html), code coverage reports: [./build/reports/jacoco/test/html/index.html](./build/reports/jacoco/test/html/index.html))
 * Creating jars: `./mvn clean install` (see [./build/libs](./build/libs))
-####HOW TO CONTRIBUTE
+#### HOW TO CONTRIBUTE
 [Fork](https://help.github.com/articles/fork-a-repo), and send a [pull request](https://help.github.com/articles/using-pull-requests) and keep your fork in [sync](https://help.github.com/articles/syncing-a-fork/) with the upstream repository.
-####LICENSE
+#### LICENSE
 Specification Builder is open source and can be found on GitHub. It is distributed under the Apache 2.0 License.
