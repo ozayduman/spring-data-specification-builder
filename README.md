@@ -1,5 +1,5 @@
 # Specification Builder 
-Specification-Builder is a client oriented dynamic search query library that supports joins among multiple tables in a strongly-type manner for Spring Projects.                                                              
+Specification-Builder is a client-oriented dynamic search query library that supports joins among multiple tables in a strongly-type manner for Spring Projects.                                                              
 This library simplifies writing type-safe queries for search screens by using `Spring Data JPA`'s `JpaSpecificationExecutor` and `hibernate-jpamodelgen`. 
 As you might know foreach query screen you have to pass a specific DTO (Data Transfer Objects) and write specific queries using that DTO.
 This leads to boiler-plate, useless, repetitive code. By using this library you can get rid of that kind of code, and write fluent-style dynamic queries driven by client-side easily.
