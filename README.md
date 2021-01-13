@@ -5,7 +5,7 @@ As you might know foreach query screen you have to pass a specific DTO (Data Tra
 This leads to boiler-plate, useless, repetitive code. By using this library you can get rid of that kind of code, and write fluent-style dynamic queries driven by client-side easily.
 
 #### FEATURES
-* Client-Side driven dynamic query generation by using fluent style programming.
+* Client-oriented dynamic query generation by using fluent style programming.
 * You can use different properties for the client and the server-side. This feature enables us not to expose domain entities to external world directly.
 * You can restrict, and open individual properties for query operations. 
 * You can use the same property names for both client-side and server-side.
