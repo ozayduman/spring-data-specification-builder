@@ -32,7 +32,7 @@ Just add the following maven dependency to your pom.xml file.
 <dependency>
     <groupId>com.github.ozayduman</groupId>
     <artifactId>specification-builder</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.3</version>
 </dependency>
 ````
 #### USAGE
