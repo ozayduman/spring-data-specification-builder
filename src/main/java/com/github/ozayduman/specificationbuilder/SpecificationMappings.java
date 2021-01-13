@@ -246,6 +246,15 @@ public class SpecificationMappings<T> {
            return new SpecificationBuilder<>(criteriaDTO);
         }
 
+        /**
+         * @param entityProperty represents the matching the server entity property
+         * @param <Z> the type of the represented entity property
+         * @return currently (this) running {@code SpecificationBuilder}
+         */
+        public <Z extends Comparable<?>> SpecificationBuilder<T> bind(SingularAttribute<T, Z> entityProperty) {
+            bind(entityProperty.getName(), entityProperty);
+            return this;
+        }
 
         /**
          * @param dtoProperty represents the client property name
@@ -256,6 +265,20 @@ public class SpecificationMappings<T> {
         public <Z extends Comparable<?>> SpecificationBuilder<T> bind(String dtoProperty, SingularAttribute<T, Z> entityProperty) {
             dtoEntityMapping.put(dtoProperty, entityProperty);
             dtoJoinMappings.put(dtoProperty, Joinable.non());
+            return this;
+        }
+
+        /**
+         * @param pluralAttribute represents the root entity
+         * @param entityProperty represents the matching the server entity property
+         * @param <A> the type of the represented entity property
+         * @param <B> represents the entity (sub entity) contained by the root entity
+         * @param <Z> the type of the represented last leaf entity property
+         * @return currently (this) running {@code SpecificationBuilder}
+         */
+        public <A, B, Z extends Comparable<?>> SpecificationBuilder<T> bindJoin(PluralAttribute<A, ?, B> pluralAttribute,
+                                                                                SingularAttribute<B, Z> entityProperty) {
+            mapJoin(entityProperty.getName(),entityProperty,pluralAttribute);
             return this;
         }
 
@@ -273,6 +296,23 @@ public class SpecificationMappings<T> {
                                                                              PluralAttribute<A, ?, B> pluralAttribute,
                                                                              SingularAttribute<B, Z> entityProperty) {
             mapJoin(dtoProperty,entityProperty,pluralAttribute);
+            return this;
+        }
+
+        /**
+         * @param pluralAttribute0 represents the root entity
+         * @param pluralAttribute1 represents the sub entity under {@code #pluralAttribute0}
+         * @param entityProperty represents the matching the server entity property
+         * @param <A> the type of the represented entity property
+         * @param <B> represents the entity (sub entity) contained by the root entity
+         * @param <C> represents the entity under type {@code B}
+         * @param <Z> the type of the represented last leaf entity property
+         * @return currently (this) running {@code SpecificationBuilder}
+         */
+        public <A, B, C, Z extends Comparable<?>> SpecificationBuilder<T> bindJoin(PluralAttribute<A, ?, B> pluralAttribute0,
+                                                                                   PluralAttribute<B, ?, C> pluralAttribute1,
+                                                                                   SingularAttribute<C, Z> entityProperty) {
+            mapJoin(entityProperty.getName(),entityProperty,pluralAttribute0,pluralAttribute1);
             return this;
         }
 
@@ -296,6 +336,26 @@ public class SpecificationMappings<T> {
         }
 
         /**
+         * @param pluralAttribute0 represents the root entity
+         * @param pluralAttribute1 represents the sub entity under {@code #pluralAttribute0}
+         * @param pluralAttribute2 represents the sub entity under {@code #pluralAttribute1}
+         * @param entityProperty represents the matching the server entity property
+         * @param <A> the type of the represented entity property
+         * @param <B> represents the entity (sub entity) contained by the root entity
+         * @param <C> represents the entity under type {@code B}
+         * @param <D> represents the entity under type {@code C}
+         * @param <Z> the type of the represented last leaf entity property
+         * @return currently (this) running {@code SpecificationBuilder}
+         */
+        public <A, B, C, D, Z extends Comparable<?>> SpecificationBuilder<T> bindJoin(PluralAttribute<A, ?, B> pluralAttribute0,
+                                                                                      PluralAttribute<B, ?, C> pluralAttribute1,
+                                                                                      PluralAttribute<C, ?, D> pluralAttribute2,
+                                                                                      SingularAttribute<D, Z> entityProperty) {
+            mapJoin(entityProperty.getName(),entityProperty,pluralAttribute0,pluralAttribute1,pluralAttribute2);
+            return this;
+        }
+
+        /**
          * @param dtoProperty represents the client property name
          * @param pluralAttribute0 represents the root entity
          * @param pluralAttribute1 represents the sub entity under {@code #pluralAttribute0}
@@ -314,6 +374,29 @@ public class SpecificationMappings<T> {
                                                                                    PluralAttribute<C, ?, D> pluralAttribute2,
                                                                                    SingularAttribute<D, Z> entityProperty) {
             mapJoin(dtoProperty,entityProperty,pluralAttribute0,pluralAttribute1,pluralAttribute2);
+            return this;
+        }
+
+        /**
+         * @param pluralAttribute0 represents the root entity
+         * @param pluralAttribute1 represents the sub entity under {@code #pluralAttribute0}
+         * @param pluralAttribute2 represents the sub entity under {@code #pluralAttribute1}
+         * @param pluralAttribute3 represents the sub entity under {@code #pluralAttribute2}
+         * @param entityProperty represents the matching the server entity property
+         * @param <A> the type of the represented entity property
+         * @param <B> represents the entity (sub entity) contained by the root entity
+         * @param <C> represents the entity under type {@code B}
+         * @param <D> represents the entity under type {@code C}
+         * @param <E> represents the entity under type {@code D}
+         * @param <Z> The type of the represented last leaf entity property
+         * @return currently (this) running {@code SpecificationBuilder}
+         */
+        public <A, B, C, D, E, Z extends Comparable<?>> SpecificationBuilder<T> bindJoin(PluralAttribute<A, ?, B> pluralAttribute0,
+                                                                                         PluralAttribute<B, ?, C> pluralAttribute1,
+                                                                                         PluralAttribute<C, ?, D> pluralAttribute2,
+                                                                                         PluralAttribute<D, ?, E> pluralAttribute3,
+                                                                                         SingularAttribute<E, Z> entityProperty) {
+            mapJoin(entityProperty.getName(), entityProperty,pluralAttribute0,pluralAttribute1,pluralAttribute2,pluralAttribute3);
             return this;
         }
 
