@@ -196,4 +196,3 @@ A [sample project repository](https://github.com/ozayduman/spring-data-specifica
 [Fork](https://help.github.com/articles/fork-a-repo), and send a [pull request](https://help.github.com/articles/using-pull-requests) and keep your fork in [sync](https://help.github.com/articles/syncing-a-fork/) with the upstream repository.
 #### LICENSE
 Specification Builder is open source and can be found on GitHub. It is distributed under the Apache 2.0 License.
-
