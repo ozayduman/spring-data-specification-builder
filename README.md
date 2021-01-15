@@ -25,7 +25,10 @@ This leads to boiler-plate, useless, repetitive code. By using this library you 
   * is true: `TRUE`
   * is false: `FALSE`
 * You can use all these operators in joins if needed as well.
-   
+#### DOCUMENTATION
+* [User Guide](#server-side)
+* [Javadoc](https://javadoc.io/doc/com.github.ozayduman/specification-builder/latest/index.html)  
+* [Sample Project](https://github.com/ozayduman/spring-data-specification) 
 #### HOW TO USE
 Just add the following maven dependency to your pom.xml file. 
 ````
