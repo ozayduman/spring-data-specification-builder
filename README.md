@@ -187,6 +187,8 @@ Sort order, requested page, and page size information can be passed as follows:
   "size": 10
 }
 ````
+#### SAMPLE PROJECT 
+A [sample project repository](https://github.com/ozayduman/spring-data-specification) that demonstrates usage of specificaiton-builder
 #### HOW TO BUILD
 * Executing tests: `./mvn test` (test reports: [./build/reports/tests/test/index.html](./build/reports/tests/test/index.html), code coverage reports: [./build/reports/jacoco/test/html/index.html](./build/reports/jacoco/test/html/index.html))
 * Creating jars: `./mvn clean install` (see [./build/libs](./build/libs))
@@ -194,4 +196,4 @@ Sort order, requested page, and page size information can be passed as follows:
 [Fork](https://help.github.com/articles/fork-a-repo), and send a [pull request](https://help.github.com/articles/using-pull-requests) and keep your fork in [sync](https://help.github.com/articles/syncing-a-fork/) with the upstream repository.
 #### LICENSE
 Specification Builder is open source and can be found on GitHub. It is distributed under the Apache 2.0 License.
-#### [SAMPLE PROJECT](SAMPLE.md)
+
