@@ -194,3 +194,4 @@ Sort order, requested page, and page size information can be passed as follows:
 [Fork](https://help.github.com/articles/fork-a-repo), and send a [pull request](https://help.github.com/articles/using-pull-requests) and keep your fork in [sync](https://help.github.com/articles/syncing-a-fork/) with the upstream repository.
 #### LICENSE
 Specification Builder is open source and can be found on GitHub. It is distributed under the Apache 2.0 License.
+#### [SAMPLE PROJECT](SAMPLE.md)
