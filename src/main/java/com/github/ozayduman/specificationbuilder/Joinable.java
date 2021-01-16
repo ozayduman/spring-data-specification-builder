@@ -47,11 +47,11 @@ public interface Joinable {
     Optional<PluralAttribute<?, ?, ?>[]> attributes();
 
     /**
-     * creates the non joinable type
+     * returns the singleton none joinable type
      * @return {@link NoJoin}
      */
     static Joinable non(){
-        return new NoJoin();
+        return NoJoin.instance;
     }
 
     /**
@@ -67,6 +67,17 @@ public interface Joinable {
      * Represents a non joinable type. When there is no need for a join, this class is used
      */
     class NoJoin implements Joinable{
+
+        /**
+         * creates {@code NoJoin}
+         */
+        private NoJoin() {}
+
+        /**
+         * Represents no join as a singleton
+         */
+        public static final Joinable instance = new NoJoin();
+
         @Override
         public Optional<PluralAttribute<?, ?, ?>[]> attributes() {
             return Optional.empty();

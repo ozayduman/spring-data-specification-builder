@@ -1,4 +1,6 @@
 # Specification Builder 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.ozayduman/specification-builder/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.ozayduman/specification-builder)
+
 Specification-Builder is a client-oriented dynamic search query library that supports joins among multiple tables in a strongly-type manner for Spring Projects.                                                              
 This library simplifies writing type-safe queries for search screens by using `Spring Data JPA`'s `JpaSpecificationExecutor` and `hibernate-jpamodelgen`. 
 As you might know foreach query screen you have to pass a specific DTO (Data Transfer Objects) and write specific queries using that DTO.
