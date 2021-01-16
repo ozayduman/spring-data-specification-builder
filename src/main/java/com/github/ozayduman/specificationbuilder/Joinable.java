@@ -47,7 +47,7 @@ public interface Joinable {
     Optional<PluralAttribute<?, ?, ?>[]> attributes();
 
     /**
-     * returns the singleton none joinable type
+     * returns the singleton non joinable type
      * @return {@link NoJoin}
      */
     static Joinable non(){
