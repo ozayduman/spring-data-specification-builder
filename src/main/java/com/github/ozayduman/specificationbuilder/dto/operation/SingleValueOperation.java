@@ -34,6 +34,7 @@ package com.github.ozayduman.specificationbuilder.dto.operation;
 
 import com.github.ozayduman.specificationbuilder.dto.Operator;
 import lombok.*;
+import org.springframework.util.Assert;
 
 import java.util.EnumSet;
 import java.util.Objects;
@@ -64,15 +65,27 @@ public class SingleValueOperation extends AbstractOperation {
     public void validate() {
         super.validate();
         Objects.requireNonNull(value, () -> "value can not be null!");
+        validateIfOperatorIsLike();
     }
 
     @Override
     protected EnumSet<Operator> allowedOperators() {
-        return EnumSet.of(EQ,NOT_EQ,GT,GE,LT,LE);
+        return EnumSet.of(EQ,NOT_EQ,GT,GE,LT,LE,LIKE,NOT_LIKE);
     }
 
     @Override
     public Comparable<?>[] getOperands() {
         return new Comparable[]{(Comparable) value};
+    }
+
+    /**
+     * When given operator is like or not like then operand's type of value must be 'String'
+     * otherwise throws {@link IllegalArgumentException}
+     */
+    private void validateIfOperatorIsLike() {
+        if(EnumSet.of(LIKE, NOT_LIKE).contains(getOperator())){
+            Assert.isInstanceOf(String.class, value,
+                    () -> String.format("type of the given value must be 'String'! instead of %s", value.getClass()));
+        }
     }
 }

@@ -169,4 +169,20 @@ public interface SpecificationOperator {
         return (From<?,?> from, CriteriaBuilder cb,SingularAttribute attribute, Comparable[] values) ->
                 cb.isFalse(from.get(attribute.getName()));
     }
+
+    /**
+     * Represents like function
+     * @return {@link SpecificationOperator}
+     */
+    static SpecificationOperator like(){
+        return (from, cb, attribute, values) -> cb.like(from.get(attribute.getName()), String.format("%%%s%%", values[0]));
+    }
+
+    /**
+     * Represents not like function
+     * @return {@link SpecificationOperator}
+     */
+    static SpecificationOperator notLike(){
+        return (from, cb, attribute, values) -> cb.notLike(from.get(attribute.getName()), String.format("%%%s%%", values[0]));
+    }
 }

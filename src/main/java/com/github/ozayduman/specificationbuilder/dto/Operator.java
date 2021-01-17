@@ -92,7 +92,15 @@ public enum Operator {
     /**
      * Represents is false operator
      */
-    FALSE(isFalse());
+    FALSE(isFalse()),
+    /**
+     * Represents is like operator
+     */
+    LIKE(like()),
+    /**
+     * Represents is not like operator
+     */
+    NOT_LIKE(notLike());
     private SpecificationOperator specificationOperator;
 
     Operator(SpecificationOperator specificationOperator) {

@@ -12,6 +12,7 @@ import com.github.ozayduman.specificationbuilder.dto.Operator;
 import com.github.ozayduman.specificationbuilder.entity.*;
 import com.github.ozayduman.specificationbuilder.mapper.EmployeeMapper;
 import com.github.ozayduman.specificationbuilder.repository.EmployeeRepository;
+import lombok.val;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -260,6 +261,46 @@ class SpecificationBuilderIntegrationTest {
         for (int i = 0; i < originalContent.size(); i++) {
             assertEquals(originalContent.get(i), sortedEmployeeDTOs.get(i));
         }
+    }
+
+    @Test
+    void whenLikeOperatorGivenThenResultRestrictedByLikeProperty() {
+        final var employees = TestDataGenerator.createEmployees();
+        employeeRepository.saveAll(employees);
+        final CriteriaDTO criteriaDTO = new CriteriaDTO();
+        criteriaDTO.setOperations(List.of(
+                new SingleValueOperation("name", Operator.LIKE, "s")));
+        val specification = SpecificationBuilder.<Employee>of(criteriaDTO)
+                .bind(Employee_.name)
+                .bind(Employee_.surname)
+                .bind(Employee_.email)
+                .bind(Employee_.birthDate)
+                .build();
+        val allEmployees = employeeRepository.findAll(specification);
+        assertTrue(allEmployees.size() > 0);
+        val hasNamesNotContainingValue = allEmployees.stream()
+                .anyMatch(employee -> !employee.getName().contains("s"));
+        assertFalse(hasNamesNotContainingValue);
+    }
+
+    @Test
+    void whenNotLikeOperatorGivenThenResultRestrictedByNotLikeProperty() {
+        final var employees = TestDataGenerator.createEmployees();
+        employeeRepository.saveAll(employees);
+        final CriteriaDTO criteriaDTO = new CriteriaDTO();
+        criteriaDTO.setOperations(List.of(
+                new SingleValueOperation("name", Operator.NOT_LIKE, "s")));
+        val specification = SpecificationBuilder.<Employee>of(criteriaDTO)
+                .bind(Employee_.name)
+                .bind(Employee_.surname)
+                .bind(Employee_.email)
+                .bind(Employee_.birthDate)
+                .build();
+        val allEmployees = employeeRepository.findAll(specification);
+        assertTrue(allEmployees.size() > 0);
+        val hasNamesContainingValue = allEmployees.stream()
+                .anyMatch(employee -> employee.getName().contains("s"));
+        assertFalse(hasNamesContainingValue);
     }
 
 }
