@@ -10,7 +10,7 @@ This leads to boiler-plate, useless, repetitive code. By using this library you 
 * You can restrict, and open individual properties for query operations. 
 * You can use the same property names for both client-side and server-side.
 * You can combine the dynamic query generation with your custom specifications.
-* Client-side decides to what operations will take place depending on the operands put in the `criteriaDTO`. On the client-side you can use the following operators:
+* Client-side decides to what operations will take place depending on the operands put in the `criteriaDTO` or `pageRequestDTO`. On the client-side you can use the following operators:
   * equal to: `EQ`
   * not equal to: `NOT_EQ`
   * greater than: `GT`
@@ -24,7 +24,9 @@ This leads to boiler-plate, useless, repetitive code. By using this library you 
   * is not null: `NOT_NULL`
   * is true: `TRUE`
   * is false: `FALSE`
-* You can use all these operators in joins if needed as well.
+  * like: `LIKE`
+  * not like: `NOT_LIKE`
+* You can use all these operators also in joins if needed as well.
    
 #### HOW TO USE
 Just add the following maven dependency to your pom.xml file. 
