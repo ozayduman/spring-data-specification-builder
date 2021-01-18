@@ -1,4 +1,6 @@
 # Specification Builder 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.ozayduman/specification-builder/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.ozayduman/specification-builder)
+
 Specification-Builder is a client-oriented dynamic search query library that supports joins among multiple tables in a strongly-type manner for Spring Projects.                                                              
 This library simplifies writing type-safe queries for search screens by using `Spring Data JPA`'s `JpaSpecificationExecutor` and `hibernate-jpamodelgen`. 
 As you might know foreach query screen you have to pass a specific DTO (Data Transfer Objects) and write specific queries using that DTO.
@@ -27,7 +29,10 @@ This leads to boiler-plate, useless, repetitive code. By using this library you 
   * like: `LIKE`
   * not like: `NOT_LIKE`
 * You can use all these operators also in joins if needed as well.
-   
+#### DOCUMENTATION
+* [User Guide](#server-side)
+* [Javadoc](https://javadoc.io/doc/com.github.ozayduman/specification-builder/latest/index.html)  
+* [Sample Project](https://github.com/ozayduman/spring-data-specification)   
 #### HOW TO USE
 Just add the following maven dependency to your pom.xml file. 
 ````
@@ -198,3 +203,4 @@ There is a [sample project repository](https://github.com/ozayduman/spring-data-
 [Fork](https://help.github.com/articles/fork-a-repo), and send a [pull request](https://help.github.com/articles/using-pull-requests) and keep your fork in [sync](https://help.github.com/articles/syncing-a-fork/) with the upstream repository.
 #### LICENSE
 Specification Builder is open source and can be found on GitHub. It is distributed under the Apache 2.0 License.
+#### [SAMPLE PROJECT](SAMPLE.md)
