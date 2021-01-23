@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.github.ozayduman</groupId>
 	<artifactId>specification-builder</artifactId>
-	<version>0.0.3</version>
+	<version>0.0.4</version>
 	<packaging>jar</packaging>
 	<name>specification-builder</name>
 	<description>Specification-Builder is a client-oriented dynamic search query library that supports joins among multiple tables in a strongly-type manner for Spring Projects. </description>

@@ -39,7 +39,7 @@ Just add the following maven dependency to your pom.xml file.
 <dependency>
     <groupId>com.github.ozayduman</groupId>
     <artifactId>specification-builder</artifactId>
-    <version>0.0.3</version>
+    <version>0.0.4</version>
 </dependency>
 ````
 #### USAGE
@@ -197,6 +197,7 @@ Sort order, requested page, and page size information can be passed as follows:
 #### SAMPLE PROJECT 
 There is a [sample project repository](https://github.com/ozayduman/spring-data-specification) that demonstrates usage of specificaiton-builder.
 #### HOW TO BUILD
+* Requires Java 14
 * Executing tests: `./mvn test` (test reports: [./build/reports/tests/test/index.html](./build/reports/tests/test/index.html), code coverage reports: [./build/reports/jacoco/test/html/index.html](./build/reports/jacoco/test/html/index.html))
 * Creating jars: `./mvn clean install` (see [./build/libs](./build/libs))
 #### HOW TO CONTRIBUTE
