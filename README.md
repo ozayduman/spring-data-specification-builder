@@ -1,6 +1,7 @@
 # Specification Builder 
 [![GitHub license](https://img.shields.io/github/license/ozayduman/spring-data-specification-builder)](https://github.com/ozayduman/spring-data-specification-builder/blob/main/LICENSE)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.ozayduman/specification-builder/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.ozayduman/specification-builder)
+[![JavaDoc](https://javadoc-badge.appspot.com/com.github.ozayduman/specification-builder.svg?label=javadoc)](https://javadoc.io/doc/com.github.ozayduman/specification-builder/latest/index.html)
 [![GitHub issues](https://img.shields.io/github/issues/ozayduman/spring-data-specification-builder)](https://github.com/ozayduman/spring-data-specification-builder/issues)
 [![Twitter](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Ftwitter.com%2Fozay_duman)](https://twitter.com/intent/tweet?text=Wow:&url=https%3A%2F%2Fgithub.com%2Fozayduman%2Fspring-data-specification-builder)
 
