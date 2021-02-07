@@ -122,7 +122,7 @@ public interface SpecificationOperator {
      */
     static SpecificationOperator in(){
         return (From<?,?> from, CriteriaBuilder cb,SingularAttribute attribute, Comparable[] values) ->
-                from.in(values);
+                from.get(attribute.getName()).in(values);
     }
 
     /**
@@ -130,8 +130,7 @@ public interface SpecificationOperator {
      * @return {@link SpecificationOperator}
      */
     static SpecificationOperator notIn(){
-        return (From<?,?> from, CriteriaBuilder cb,SingularAttribute attribute, Comparable[] values) ->
-                from.in(values).not();
+        return not(in());
     }
 
     /**
@@ -184,5 +183,15 @@ public interface SpecificationOperator {
      */
     static SpecificationOperator notLike(){
         return (from, cb, attribute, values) -> cb.notLike(from.get(attribute.getName()), String.format("%%%s%%", values[0]));
+    }
+
+    /** Represents a Higher Order Function that inverts a given {@code SpecificationOperator}
+     * @param operator is a Specification operator
+     * @return {@Link SpecificationOperator}
+     */
+    static SpecificationOperator not(SpecificationOperator operator){
+        return operator == null
+                ? (from, cb, attribute, values) -> null
+                : (from, cb, attribute, values) -> cb.not(operator.apply(from, cb, attribute, values));
     }
 }
