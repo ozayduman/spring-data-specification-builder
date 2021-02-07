@@ -43,14 +43,14 @@ Just add the following maven dependency to your pom.xml file.
 <dependency>
     <groupId>com.github.ozayduman</groupId>
     <artifactId>specification-builder</artifactId>
-    <version>0.0.4</version>
+    <version>0.0.5</version>
 </dependency>
 ````
 #### USAGE
 
 #### SERVER-SIDE
 by using bind method you can enable properties to be used in dynamic query generation. Client is allowed to use the properties only bound via bind method.
-if DTO properties are different from the entity properties then you have to specify it as the first argument of the bind method e.g. `bind("employeeName", Employee_.name)`. Otherwise, you can fell free to omit it e.g. `bind("Employee_.name)`.
+if DTO properties are different from the entity properties then you have to specify it as the first argument of the bind method e.g. `bind("employeeName", Employee_.name)`. Otherwise, you can fell free to omit it e.g. `bind(Employee_.name)`.
 
 ![](.README_images/specification1.png)
  ```

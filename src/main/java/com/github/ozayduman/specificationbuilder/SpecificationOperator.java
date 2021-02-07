@@ -187,7 +187,7 @@ public interface SpecificationOperator {
 
     /** Represents a Higher Order Function that inverts a given {@code SpecificationOperator}
      * @param operator is a Specification operator
-     * @return {@Link SpecificationOperator}
+     * @return {@link SpecificationOperator}
      */
     static SpecificationOperator not(SpecificationOperator operator){
         return operator == null
