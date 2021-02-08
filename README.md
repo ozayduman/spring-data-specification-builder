@@ -46,6 +46,14 @@ Just add the following maven dependency to your pom.xml file.
     <version>0.0.5</version>
 </dependency>
 ````
+For Gradle, use the following dependency:
+````
+implementation 'com.github.ozayduman:specification-builder:0.0.5'
+````
+For Scala SBT, use the following dependency:
+````
+libraryDependencies += "com.github.ozayduman" % "specification-builder" % "0.0.5"
+````
 #### USAGE
 
 #### SERVER-SIDE
