@@ -32,7 +32,7 @@
 
 package com.github.ozayduman.specificationbuilder;
 
-import javax.persistence.metamodel.PluralAttribute;
+import javax.persistence.metamodel.Attribute;
 import java.util.Optional;
 
 /**
@@ -44,7 +44,7 @@ public interface Joinable {
     /**
      * @return join item attributes as an array
      */
-    Optional<PluralAttribute<?, ?, ?>[]> attributes();
+    Optional<Attribute<?, ?>[]> attributes();
 
     /**
      * creates the non joinable type
@@ -56,11 +56,11 @@ public interface Joinable {
 
     /**
      * creates a joinable type
-     * @param joinPluralAttribute represents each item in the join as an array
-     * @return {@link PluralAttributeJoin}
+     * @param joinAttribute represents each item in the join as an array
+     * @return {@link AttributeJoin}
      */
-    static Joinable join(PluralAttribute<?, ?, ?>[] joinPluralAttribute){
-        return new PluralAttributeJoin(joinPluralAttribute);
+    static Joinable join(Attribute<?, ?>[] joinAttribute){
+        return new AttributeJoin(joinAttribute);
     }
 
     /**
@@ -68,7 +68,7 @@ public interface Joinable {
      */
     class NoJoin implements Joinable{
         @Override
-        public Optional<PluralAttribute<?, ?, ?>[]> attributes() {
+        public Optional<Attribute<?, ?>[]> attributes() {
             return Optional.empty();
         }
     }
@@ -76,19 +76,19 @@ public interface Joinable {
     /**
      * Represents joinable type holding the join chain as {@code #joinPluralAttribute}.
      */
-    class PluralAttributeJoin implements Joinable{
-        private final PluralAttribute<?, ?, ?>[] joinPluralAttribute;
+    class AttributeJoin implements Joinable{
+        private final Attribute<?, ?>[] joinAttribute;
 
         /**
-         * @param joinPluralAttribute creates {@code PluralAttributeJoin} with {@code #joinPluralAttribute}
+         * @param joinAttribute creates {@code PluralAttributeJoin} with {@code #joinPluralAttribute}
          */
-        public PluralAttributeJoin(PluralAttribute<?,?,?>[] joinPluralAttribute) {
-            this.joinPluralAttribute = joinPluralAttribute;
+        public AttributeJoin(Attribute<?,?>[] joinAttribute) {
+            this.joinAttribute = joinAttribute;
         }
 
         @Override
-        public Optional<PluralAttribute<?, ?, ?>[]> attributes() {
-            return Optional.of(joinPluralAttribute);
+        public Optional<Attribute<?, ?>[]> attributes() {
+            return Optional.of(joinAttribute);
         }
     }
 }

@@ -1,16 +1,11 @@
 package com.github.ozayduman.specificationbuilder;
 
-import com.github.ozayduman.specificationbuilder.dto.CriteriaDTO;
-import com.github.ozayduman.specificationbuilder.dto.EmployeeResponseDTO;
-import com.github.ozayduman.specificationbuilder.dto.PageRequestDTO;
+import com.github.ozayduman.specificationbuilder.dto.*;
 import com.github.ozayduman.specificationbuilder.dto.PageRequestDTO.PageRequestBuilder;
 import com.github.ozayduman.specificationbuilder.dto.PageRequestDTO.SortDTO;
-import com.github.ozayduman.specificationbuilder.dto.PageResultDTO;
 import com.github.ozayduman.specificationbuilder.dto.operation.NoValueOperation;
 import com.github.ozayduman.specificationbuilder.dto.operation.SingleValueOperation;
-import com.github.ozayduman.specificationbuilder.dto.Operator;
 import com.github.ozayduman.specificationbuilder.entity.*;
-import com.github.ozayduman.specificationbuilder.mapper.EmployeeMapper;
 import com.github.ozayduman.specificationbuilder.repository.EmployeeRepository;
 import lombok.val;
 import org.junit.jupiter.api.Disabled;
@@ -26,16 +21,14 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.persistence.criteria.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.Month;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 import static com.github.ozayduman.specificationbuilder.SpecificationMappings.SpecificationBuilder;
+import static com.github.ozayduman.specificationbuilder.entity.SocialSecurityType.A;
 import static java.util.Comparator.comparing;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -82,14 +75,14 @@ class SpecificationBuilderIntegrationTest {
         CriteriaQuery<?> criteriaQueryMock = mock(CriteriaQuery.class);
         CriteriaBuilder criteriaBuilderMock = mock(CriteriaBuilder.class);
         Predicate namePredicateMock = mock(Predicate.class);
-        when(criteriaBuilderMock.equal(Mockito.any(),Mockito.any())).thenReturn(namePredicateMock);
+        when(criteriaBuilderMock.equal(Mockito.any(), Mockito.any())).thenReturn(namePredicateMock);
 
         final Predicate predicate = specification.toPredicate(rootMock, criteriaQueryMock, criteriaBuilderMock);
 
         verify(rootMock, times(1)).get(Employee_.name);
         verifyNoMoreInteractions(rootMock);
         verify(criteriaBuilderMock, times(1)).equal(namePathMock, valueOfName);
-        verify(criteriaBuilderMock,never()).conjunction();
+        verify(criteriaBuilderMock, never()).conjunction();
         verifyNoInteractions(criteriaQueryMock);
     }
 
@@ -101,7 +94,7 @@ class SpecificationBuilderIntegrationTest {
         criteriaDTO.setOperations(List.of(operation));
 
 
-       final Specification<Employee> specification = SpecificationBuilder.<Employee>of(criteriaDTO)
+        final Specification<Employee> specification = SpecificationBuilder.<Employee>of(criteriaDTO)
                 .bind("name", Employee_.name)
                 .build();
 
@@ -120,7 +113,7 @@ class SpecificationBuilderIntegrationTest {
         final String valueOfLastName = "Duman";
         var operationForName = new SingleValueOperation("name", Operator.EQ, valueOfName);
         var operationForSurname = new SingleValueOperation("surname", Operator.EQ, valueOfLastName);
-        criteriaDTO.setOperations(List.of(operationForName,operationForSurname));
+        criteriaDTO.setOperations(List.of(operationForName, operationForSurname));
 
         final Specification<Employee> specification = SpecificationBuilder.<Employee>of(criteriaDTO)
                 .bind("name", Employee_.name)
@@ -202,9 +195,9 @@ class SpecificationBuilderIntegrationTest {
                 .orElseThrow(() -> new NoSuchElementException());
 
         assertNotNull(customerFromDB);
-        assertEquals("özay",customerFromDB.getName());
-        assertEquals("duman",customerFromDB.getSurname());
-        assertEquals("ozay.duman@gmail.com",customerFromDB.getEmail());
+        assertEquals("özay", customerFromDB.getName());
+        assertEquals("duman", customerFromDB.getSurname());
+        assertEquals("ozay.duman@gmail.com", customerFromDB.getEmail());
     }
 
     @Test
@@ -213,7 +206,7 @@ class SpecificationBuilderIntegrationTest {
         employeeRepository.saveAll(employees);
         final PageRequestDTO pageRequestDTO = new PageRequestDTO();
         pageRequestDTO.setOperations(List.of(
-                new SingleValueOperation("employeeBirthDate",Operator.GT, LocalDate.of(2000, Month.JANUARY,1))));
+                new SingleValueOperation("employeeBirthDate", Operator.GT, LocalDate.of(2000, Month.JANUARY, 1))));
         pageRequestDTO.setPage(0);
         pageRequestDTO.setSize(10);
         pageRequestDTO.setSortFields(new SortDTO[]{
@@ -300,6 +293,29 @@ class SpecificationBuilderIntegrationTest {
         assertTrue(allEmployees.size() > 0);
         val hasNamesContainingValue = allEmployees.stream()
                 .anyMatch(employee -> employee.getName().contains("s"));
+        assertFalse(hasNamesContainingValue);
+    }
+
+    @Test
+    void whenOperatorGivenThenResultRestrictedByNotLikeProperty() {
+        final var socialSecurity = SocialSecurity.of(A, "AAA");
+        final var employee = Employee.of("özay", "duman", "o.d@test.com",
+                LocalDate.of(1900, Month.JANUARY, 1), socialSecurity);
+        employeeRepository.save(employee);
+        final CriteriaDTO criteriaDTO = new CriteriaDTO();
+        criteriaDTO.setOperations(List.of(
+                new SingleValueOperation("name", Operator.NOT_LIKE, "s")));
+        val specification = SpecificationBuilder.<Employee>of(criteriaDTO)
+                .bind(Employee_.name)
+                .bind(Employee_.surname)
+                .bind(Employee_.email)
+                .bind(Employee_.birthDate)
+                .bindJoin(Employee_.socialSecurity, SocialSecurity_.socialSecurityType)
+                .build();
+        val allEmployees = employeeRepository.findAll(specification);
+        assertTrue(allEmployees.size() > 0);
+        val hasNamesContainingValue = allEmployees.stream()
+                .anyMatch(e -> e.getName().contains("s"));
         assertFalse(hasNamesContainingValue);
     }
 
