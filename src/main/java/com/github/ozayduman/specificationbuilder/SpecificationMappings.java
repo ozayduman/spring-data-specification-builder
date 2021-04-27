@@ -322,7 +322,6 @@ public class SpecificationMappings<T> {
          * @param <B>             represents the entity (sub entity) contained by the root entity
          * @param <Z>             the type of the represented last leaf entity property
          * @return currently (this) running {@code SpecificationBuilder}
-         * @return
          */
         public <A, B, Z extends Comparable<?> > SpecificationBuilder<T> bindJoin(String dtoProperty,
                                                                                     SingularAttribute<A, B> singularAttribute0,
