@@ -39,9 +39,9 @@ import com.github.ozayduman.specificationbuilder.dto.PageRequestDTO;
 import com.github.ozayduman.specificationbuilder.dto.operation.AbstractOperation;
 import org.springframework.data.jpa.domain.Specification;
 
+import javax.persistence.Embedded;
 import javax.persistence.criteria.*;
 import javax.persistence.metamodel.Attribute;
-import javax.persistence.metamodel.Bindable;
 import javax.persistence.metamodel.PluralAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import java.util.*;
@@ -153,12 +153,12 @@ public class SpecificationMappings<T> {
          * @param joinAttributes represents the entities between the root entity and the last entity in the hierarchy of the {@code JoinGraph}
          * @return if joinAttributes present then join {@code From}, otherwise root {@code Root}
          */
-        private From<?, ?> from(Root<?> root, Optional<Attribute<?, ?>[]> joinAttributes) {
+        private Path<?> from(Root<?> root, Optional<Attribute<?, ?>[]> joinAttributes) {
             if (joinAttributes.isPresent()) {
-                From<?, ?> join = root;
+                Path<?> join = root;
                 Map<Attribute<?, ?>, JoinNode> currentMapOfSets = mapOfSets;
                 for (Attribute<?, ?> attribute : joinAttributes.get()) {
-                    From<?, ?> finalJoin = join;
+                    Path<?> finalJoin = join;
                     var joinNode = currentMapOfSets.computeIfAbsent(attribute, a -> JoinNode.of(attribute, finalJoin));
                     join = joinNode.getJoin();
                     currentMapOfSets = joinNode.joinNodes;
@@ -174,12 +174,14 @@ public class SpecificationMappings<T> {
          */
         static class JoinNode {
             public final Attribute<?, ?> attribute;
-            public final From<Object, Object> join;
+            public Path<Object> join;
             public final Map<Attribute<?, ?>, JoinNode> joinNodes = new HashMap<>();
 
-            private JoinNode(From<?, ?> from, Attribute<?, ?> attribute) {
+            private JoinNode(Path<?> from, Attribute<?, ?> attribute) {
                 this.attribute = attribute;
-                this.join = from.join(attribute.getName());
+                this.join =  Attribute.PersistentAttributeType.EMBEDDED.equals(attribute.getPersistentAttributeType())
+                        ? from.get(attribute.getName())
+                        : ((From<?, ?>) from).join(attribute.getName());
             }
 
 
@@ -190,11 +192,11 @@ public class SpecificationMappings<T> {
              * @param from      represents the preceding join
              * @return {@code JoinNode}
              */
-            public static JoinNode of(Attribute<?, ?> attribute, From<?, ?> from) {
+            public static JoinNode of(Attribute<?, ?> attribute, Path<?> from) {
                 return new JoinNode(from, attribute);
             }
 
-            public From<?, ?> getJoin() {
+            public Path<?> getJoin() {
                 return join;
             }
         }
@@ -212,7 +214,7 @@ public class SpecificationMappings<T> {
      *                            .bind("employeeSurname", Employee_.surname)
      *                            .bind("employeeEmail", Employee_.email)
      *                            .bind("employeeBirthDate", Employee_.birthDate)
-     *                            .bindJoin("phoneNumber", Employee_.phones, Phone_.number)
+     *                            .bind("phoneNumber", Employee_.phones, Phone_.number)
      *                            .build();
      *
      *                    var pageRequest = PageRequestBuilder.of(pageRequestDTO)
@@ -278,9 +280,9 @@ public class SpecificationMappings<T> {
          * @param <Z>             the type of the represented last leaf entity property
          * @return currently (this) running {@code SpecificationBuilder}
          */
-        public <A, B, Z extends Comparable<?>> SpecificationBuilder<T> bindJoin(PluralAttribute<A, ?, B> pluralAttribute,
-                                                                                SingularAttribute<B, Z> entityProperty) {
-            mapJoin(entityProperty.getName(), entityProperty, pluralAttribute);
+        public <A, B, Z extends Comparable<?>> SpecificationBuilder<T> bind(PluralAttribute<A, ?, B> pluralAttribute,
+                                                                            SingularAttribute<B, Z> entityProperty) {
+            map(entityProperty.getName(), entityProperty, pluralAttribute);
             return this;
         }
 
@@ -292,9 +294,9 @@ public class SpecificationMappings<T> {
          * @param <Z>             the type of the represented last leaf entity property
          * @return currently (this) running {@code SpecificationBuilder}
          */
-        public <A, B, Z extends Comparable<?>> SpecificationBuilder<T> bindJoin(SingularAttribute<A, B> singularAttribute,
-                                                                                SingularAttribute<B, Z> entityProperty) {
-            mapJoin(entityProperty.getName(), entityProperty, singularAttribute);
+        public <A, B, Z extends Comparable<?>> SpecificationBuilder<T> bind(SingularAttribute<A, B> singularAttribute,
+                                                                            SingularAttribute<B, Z> entityProperty) {
+            map(entityProperty.getName(), entityProperty, singularAttribute);
             return this;
         }
 
@@ -307,10 +309,10 @@ public class SpecificationMappings<T> {
          * @param <Z>             the type of the represented last leaf entity property
          * @return currently (this) running {@code SpecificationBuilder}
          */
-        public <A, B, Z extends Comparable<?>> SpecificationBuilder<T> bindJoin(String dtoProperty,
-                                                                                PluralAttribute<A, ?, B> pluralAttribute,
-                                                                                SingularAttribute<B, Z> entityProperty) {
-            mapJoin(dtoProperty, entityProperty, pluralAttribute);
+        public <A, B, Z extends Comparable<?>> SpecificationBuilder<T> bind(String dtoProperty,
+                                                                            PluralAttribute<A, ?, B> pluralAttribute,
+                                                                            SingularAttribute<B, Z> entityProperty) {
+            map(dtoProperty, entityProperty, pluralAttribute);
             return this;
         }
 
@@ -324,10 +326,10 @@ public class SpecificationMappings<T> {
          * @return currently (this) running {@code SpecificationBuilder}
          * @return
          */
-        public <A, B, Z extends Comparable<?> > SpecificationBuilder<T> bindJoin(String dtoProperty,
-                                                                                    SingularAttribute<A, B> singularAttribute0,
-                                                                                    SingularAttribute<B, Z> entityProperty) {
-            mapJoin(dtoProperty, entityProperty, singularAttribute0);
+        public <A, B, Z extends Comparable<?> > SpecificationBuilder<T> bind(String dtoProperty,
+                                                                             SingularAttribute<A, B> singularAttribute0,
+                                                                             SingularAttribute<B, Z> entityProperty) {
+            map(dtoProperty, entityProperty, singularAttribute0);
             return this;
         }
 
@@ -342,10 +344,10 @@ public class SpecificationMappings<T> {
          * @param <Z>              the type of the represented last leaf entity property
          * @return currently (this) running {@code SpecificationBuilder}
          */
-        public <A, B, C, Z extends Comparable<?>> SpecificationBuilder<T> bindJoin(PluralAttribute<A, ?, B> pluralAttribute0,
-                                                                                   PluralAttribute<B, ?, C> pluralAttribute1,
-                                                                                   SingularAttribute<C, Z> entityProperty) {
-            mapJoin(entityProperty.getName(), entityProperty, pluralAttribute0, pluralAttribute1);
+        public <A, B, C, Z extends Comparable<?>> SpecificationBuilder<T> bind(PluralAttribute<A, ?, B> pluralAttribute0,
+                                                                               PluralAttribute<B, ?, C> pluralAttribute1,
+                                                                               SingularAttribute<C, Z> entityProperty) {
+            map(entityProperty.getName(), entityProperty, pluralAttribute0, pluralAttribute1);
             return this;
         }
 
@@ -360,11 +362,11 @@ public class SpecificationMappings<T> {
          * @param <Z>              the type of the represented last leaf entity property
          * @return currently (this) running {@code SpecificationBuilder}
          */
-        public <A, B, C, Z extends Comparable<?>> SpecificationBuilder<T> bindJoin(String dtoProperty,
-                                                                                   PluralAttribute<A, ?, B> pluralAttribute0,
-                                                                                   PluralAttribute<B, ?, C> pluralAttribute1,
-                                                                                   SingularAttribute<C, Z> entityProperty) {
-            mapJoin(dtoProperty, entityProperty, pluralAttribute0, pluralAttribute1);
+        public <A, B, C, Z extends Comparable<?>> SpecificationBuilder<T> bind(String dtoProperty,
+                                                                               PluralAttribute<A, ?, B> pluralAttribute0,
+                                                                               PluralAttribute<B, ?, C> pluralAttribute1,
+                                                                               SingularAttribute<C, Z> entityProperty) {
+            map(dtoProperty, entityProperty, pluralAttribute0, pluralAttribute1);
             return this;
         }
 
@@ -380,11 +382,11 @@ public class SpecificationMappings<T> {
          * @param <Z>              the type of the represented last leaf entity property
          * @return currently (this) running {@code SpecificationBuilder}
          */
-        public <A, B, C, D, Z extends Comparable<?>> SpecificationBuilder<T> bindJoin(PluralAttribute<A, ?, B> pluralAttribute0,
-                                                                                      PluralAttribute<B, ?, C> pluralAttribute1,
-                                                                                      PluralAttribute<C, ?, D> pluralAttribute2,
-                                                                                      SingularAttribute<D, Z> entityProperty) {
-            mapJoin(entityProperty.getName(), entityProperty, pluralAttribute0, pluralAttribute1, pluralAttribute2);
+        public <A, B, C, D, Z extends Comparable<?>> SpecificationBuilder<T> bind(PluralAttribute<A, ?, B> pluralAttribute0,
+                                                                                  PluralAttribute<B, ?, C> pluralAttribute1,
+                                                                                  PluralAttribute<C, ?, D> pluralAttribute2,
+                                                                                  SingularAttribute<D, Z> entityProperty) {
+            map(entityProperty.getName(), entityProperty, pluralAttribute0, pluralAttribute1, pluralAttribute2);
             return this;
         }
 
@@ -401,12 +403,12 @@ public class SpecificationMappings<T> {
          * @param <Z>              the type of the represented last leaf entity property
          * @return currently (this) running {@code SpecificationBuilder}
          */
-        public <A, B, C, D, Z extends Comparable<?>> SpecificationBuilder<T> bindJoin(String dtoProperty,
-                                                                                      PluralAttribute<A, ?, B> pluralAttribute0,
-                                                                                      PluralAttribute<B, ?, C> pluralAttribute1,
-                                                                                      PluralAttribute<C, ?, D> pluralAttribute2,
-                                                                                      SingularAttribute<D, Z> entityProperty) {
-            mapJoin(dtoProperty, entityProperty, pluralAttribute0, pluralAttribute1, pluralAttribute2);
+        public <A, B, C, D, Z extends Comparable<?>> SpecificationBuilder<T> bind(String dtoProperty,
+                                                                                  PluralAttribute<A, ?, B> pluralAttribute0,
+                                                                                  PluralAttribute<B, ?, C> pluralAttribute1,
+                                                                                  PluralAttribute<C, ?, D> pluralAttribute2,
+                                                                                  SingularAttribute<D, Z> entityProperty) {
+            map(dtoProperty, entityProperty, pluralAttribute0, pluralAttribute1, pluralAttribute2);
             return this;
         }
 
@@ -424,12 +426,12 @@ public class SpecificationMappings<T> {
          * @param <Z>              The type of the represented last leaf entity property
          * @return currently (this) running {@code SpecificationBuilder}
          */
-        public <A, B, C, D, E, Z extends Comparable<?>> SpecificationBuilder<T> bindJoin(PluralAttribute<A, ?, B> pluralAttribute0,
-                                                                                         PluralAttribute<B, ?, C> pluralAttribute1,
-                                                                                         PluralAttribute<C, ?, D> pluralAttribute2,
-                                                                                         PluralAttribute<D, ?, E> pluralAttribute3,
-                                                                                         SingularAttribute<E, Z> entityProperty) {
-            mapJoin(entityProperty.getName(), entityProperty, pluralAttribute0, pluralAttribute1, pluralAttribute2, pluralAttribute3);
+        public <A, B, C, D, E, Z extends Comparable<?>> SpecificationBuilder<T> bind(PluralAttribute<A, ?, B> pluralAttribute0,
+                                                                                     PluralAttribute<B, ?, C> pluralAttribute1,
+                                                                                     PluralAttribute<C, ?, D> pluralAttribute2,
+                                                                                     PluralAttribute<D, ?, E> pluralAttribute3,
+                                                                                     SingularAttribute<E, Z> entityProperty) {
+            map(entityProperty.getName(), entityProperty, pluralAttribute0, pluralAttribute1, pluralAttribute2, pluralAttribute3);
             return this;
         }
 
@@ -448,13 +450,13 @@ public class SpecificationMappings<T> {
          * @param <Z>              The type of the represented last leaf entity property
          * @return currently (this) running {@code SpecificationBuilder}
          */
-        public <A, B, C, D, E, Z extends Comparable<?>> SpecificationBuilder<T> bindJoin(String dtoProperty,
-                                                                                         PluralAttribute<A, ?, B> pluralAttribute0,
-                                                                                         PluralAttribute<B, ?, C> pluralAttribute1,
-                                                                                         PluralAttribute<C, ?, D> pluralAttribute2,
-                                                                                         PluralAttribute<D, ?, E> pluralAttribute3,
-                                                                                         SingularAttribute<E, Z> entityProperty) {
-            mapJoin(dtoProperty, entityProperty, pluralAttribute0, pluralAttribute1, pluralAttribute2, pluralAttribute3);
+        public <A, B, C, D, E, Z extends Comparable<?>> SpecificationBuilder<T> bind(String dtoProperty,
+                                                                                     PluralAttribute<A, ?, B> pluralAttribute0,
+                                                                                     PluralAttribute<B, ?, C> pluralAttribute1,
+                                                                                     PluralAttribute<C, ?, D> pluralAttribute2,
+                                                                                     PluralAttribute<D, ?, E> pluralAttribute3,
+                                                                                     SingularAttribute<E, Z> entityProperty) {
+            map(dtoProperty, entityProperty, pluralAttribute0, pluralAttribute1, pluralAttribute2, pluralAttribute3);
             return this;
         }
 
@@ -462,8 +464,8 @@ public class SpecificationMappings<T> {
          * @param singularAttribute represents the matching the server entity property
          * @param joinAttributes    represents the entities between the root entity and the last entity in the hierarchy
          */
-        private void mapJoin(SingularAttribute<?, ? extends Comparable<?>> singularAttribute, PluralAttribute<?, ?, ?>... joinAttributes) {
-            mapJoin(singularAttribute.getName(), singularAttribute, joinAttributes);
+        private void map(SingularAttribute<?, ? extends Comparable<?>> singularAttribute, PluralAttribute<?, ?, ?>... joinAttributes) {
+            map(singularAttribute.getName(), singularAttribute, joinAttributes);
         }
 
 
@@ -477,7 +479,7 @@ public class SpecificationMappings<T> {
             dtoJoinMappings.put(dtoProperty, Joinable.join(joinAttributes));
         }*/
 
-        private void mapJoin(String dtoProperty,  SingularAttribute<?, ? extends Comparable<?>> singularAttribute, Attribute<?, ?>... joinAttributes) {
+        private void map(String dtoProperty, SingularAttribute<?, ? extends Comparable<?>> singularAttribute, Attribute<?, ?>... joinAttributes) {
             dtoEntityMapping.put(dtoProperty, singularAttribute);
             dtoJoinMappings.put(dtoProperty, Joinable.join(joinAttributes));
         }

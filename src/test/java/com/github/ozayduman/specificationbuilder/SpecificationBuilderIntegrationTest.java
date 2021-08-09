@@ -188,7 +188,7 @@ class SpecificationBuilderIntegrationTest {
         criteriaDTO.setOperations(List.of(operation));
 
         final Specification<Employee> specification = SpecificationBuilder.<Employee>of(criteriaDTO)
-                .bindJoin("phoneNumber", Employee_.phones, Phone_.number)
+                .bind("phoneNumber", Employee_.phones, Phone_.number)
                 .build();
 
         var customerFromDB = employeeRepository.findOne(specification)
@@ -219,7 +219,7 @@ class SpecificationBuilderIntegrationTest {
                 .bind("employeeSurname", Employee_.surname)
                 .bind("employeeEmail", Employee_.email)
                 .bind("employeeBirthDate", Employee_.birthDate)
-                .bindJoin("phoneNumber", Employee_.phones, Phone_.number)
+                .bind("phoneNumber", Employee_.phones, Phone_.number)
                 .build();
 
         var pageRequest = PageRequestBuilder.of(pageRequestDTO)
@@ -310,7 +310,7 @@ class SpecificationBuilderIntegrationTest {
                 .bind(Employee_.surname)
                 .bind(Employee_.email)
                 .bind(Employee_.birthDate)
-                .bindJoin(Employee_.socialSecurity, SocialSecurity_.socialSecurityType)
+                .bind(Employee_.socialSecurity, SocialSecurity_.socialSecurityType)
                 .build();
         val allEmployees = employeeRepository.findAll(specification);
         assertTrue(allEmployees.size() > 0);

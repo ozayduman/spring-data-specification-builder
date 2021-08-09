@@ -33,10 +33,9 @@
 package com.github.ozayduman.specificationbuilder;
 
 import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.From;
+import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.metamodel.SingularAttribute;
-import java.net.URL;
 
 /**
  * A functional interface represents Query Operators that will be used to build a Specification.
@@ -51,14 +50,14 @@ public interface SpecificationOperator {
      * @param values Represents operation's values
      * @return {@code Predicate}
      */
-    Predicate apply(From<?,?> from, CriteriaBuilder cb, SingularAttribute attribute, Comparable[] values);
+    Predicate apply(Path<?> from, CriteriaBuilder cb, SingularAttribute attribute, Comparable[] values);
 
     /**
      * Represents equality function
      * @return {@link SpecificationOperator}
      */
     static SpecificationOperator eq(){
-        return (From<?,?> from, CriteriaBuilder cb,SingularAttribute attribute, Comparable[] values) ->
+        return (Path<?> from, CriteriaBuilder cb,SingularAttribute attribute, Comparable[] values) ->
                 cb.equal(from.get(attribute.getName()), values[0]);
     }
 
@@ -67,7 +66,7 @@ public interface SpecificationOperator {
      * @return {@link SpecificationOperator}
      */
     static SpecificationOperator notEq(){
-        return (From<?,?> from, CriteriaBuilder cb,SingularAttribute attribute, Comparable[] values) ->
+        return (Path<?> from, CriteriaBuilder cb,SingularAttribute attribute, Comparable[] values) ->
                 cb.notEqual(from.get(attribute.getName()), values[0]);
     }
 
@@ -76,7 +75,7 @@ public interface SpecificationOperator {
      * @return {@link SpecificationOperator}
      */
     static SpecificationOperator bt(){
-        return (From<?,?> from, CriteriaBuilder cb,SingularAttribute attribute, Comparable[] values) ->
+        return (Path<?> from, CriteriaBuilder cb,SingularAttribute attribute, Comparable[] values) ->
                 cb.between(from.get(attribute.getName()), values[0], values[1]);
     }
 
@@ -85,7 +84,7 @@ public interface SpecificationOperator {
      * @return {@link SpecificationOperator}
      */
     static SpecificationOperator gt(){
-        return (From<?,?> from, CriteriaBuilder cb,SingularAttribute attribute, Comparable[] values) ->
+        return (Path<?> from, CriteriaBuilder cb,SingularAttribute attribute, Comparable[] values) ->
                 cb.greaterThan(from.get(attribute.getName()), values[0]);
     }
 
@@ -94,7 +93,7 @@ public interface SpecificationOperator {
      * @return {@link SpecificationOperator}
      */
     static SpecificationOperator ge(){
-        return (From<?,?> from, CriteriaBuilder cb,SingularAttribute attribute, Comparable[] values) ->
+        return (Path<?> from, CriteriaBuilder cb,SingularAttribute attribute, Comparable[] values) ->
                 cb.greaterThanOrEqualTo(from.get(attribute.getName()), values[0]);
     }
 
@@ -103,7 +102,7 @@ public interface SpecificationOperator {
      * @return {@link SpecificationOperator}
      */
     static SpecificationOperator lt(){
-        return (From<?,?> from, CriteriaBuilder cb,SingularAttribute attribute, Comparable[] values) ->
+        return (Path<?> from, CriteriaBuilder cb,SingularAttribute attribute, Comparable[] values) ->
                 cb.lessThan(from.get(attribute.getName()), values[0]);
     }
 
@@ -112,7 +111,7 @@ public interface SpecificationOperator {
      * @return {@link SpecificationOperator}
      */
     static SpecificationOperator le(){
-        return (From<?,?> from, CriteriaBuilder cb,SingularAttribute attribute, Comparable[] values) ->
+        return (Path<?> from, CriteriaBuilder cb,SingularAttribute attribute, Comparable[] values) ->
                 cb.lessThanOrEqualTo(from.get(attribute.getName()), values[0]);
     }
 
@@ -121,7 +120,7 @@ public interface SpecificationOperator {
      * @return {@link SpecificationOperator}
      */
     static SpecificationOperator in(){
-        return (From<?,?> from, CriteriaBuilder cb,SingularAttribute attribute, Comparable[] values) ->
+        return (Path<?> from, CriteriaBuilder cb,SingularAttribute attribute, Comparable[] values) ->
                 from.get(attribute.getName()).in(values);
     }
 
@@ -138,7 +137,7 @@ public interface SpecificationOperator {
      * @return {@link SpecificationOperator}
      */
     static SpecificationOperator isNull(){
-        return (From<?,?> from, CriteriaBuilder cb,SingularAttribute attribute, Comparable[] values) ->
+        return (Path<?> from, CriteriaBuilder cb,SingularAttribute attribute, Comparable[] values) ->
                 cb.isNull(from.get(attribute.getName()));
     }
 
@@ -147,7 +146,7 @@ public interface SpecificationOperator {
      * @return {@link SpecificationOperator}
      */
     static SpecificationOperator isNotNull(){
-        return (From<?,?> from, CriteriaBuilder cb,SingularAttribute attribute, Comparable[] values) ->
+        return (Path<?> from, CriteriaBuilder cb,SingularAttribute attribute, Comparable[] values) ->
                 cb.isNotNull(from.get(attribute.getName()));
     }
 
@@ -156,7 +155,7 @@ public interface SpecificationOperator {
      * @return {@link SpecificationOperator}
      */
     static SpecificationOperator isTrue(){
-        return (From<?,?> from, CriteriaBuilder cb,SingularAttribute attribute, Comparable[] values) ->
+        return (Path<?> from, CriteriaBuilder cb,SingularAttribute attribute, Comparable[] values) ->
                 cb.isTrue(from.get(attribute.getName()));
     }
 
@@ -165,7 +164,7 @@ public interface SpecificationOperator {
      * @return {@link SpecificationOperator}
      */
     static SpecificationOperator isFalse(){
-        return (From<?,?> from, CriteriaBuilder cb,SingularAttribute attribute, Comparable[] values) ->
+        return (Path<?> from, CriteriaBuilder cb,SingularAttribute attribute, Comparable[] values) ->
                 cb.isFalse(from.get(attribute.getName()));
     }
 
