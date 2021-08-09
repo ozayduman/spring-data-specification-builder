@@ -1,5 +1,6 @@
 package com.github.ozayduman.specificationbuilder;
 
+import com.github.ozayduman.specificationbuilder.SpecificationMappings.CompoundOperation.$;
 import com.github.ozayduman.specificationbuilder.dto.*;
 import com.github.ozayduman.specificationbuilder.dto.PageRequestDTO.PageRequestBuilder;
 import com.github.ozayduman.specificationbuilder.dto.PageRequestDTO.SortDTO;
@@ -319,4 +320,14 @@ class SpecificationBuilderIntegrationTest {
         assertFalse(hasNamesContainingValue);
     }
 
+    @Test
+    void shouldSupportCompoundOrOperation() {
+        final var employees = TestDataGenerator.createEmployees();
+        employeeRepository.saveAll(employees);
+        val criteriaDTO = new CriteriaDTO();
+        Specification<Employee> specification = SpecificationBuilder.<Employee>of(criteriaDTO)
+                .compound($.or(Employee_.name, Employee_.surname))
+                .compound($.or(Employee_.email, Employee_.birthDate))
+                .build();
+    }
 }

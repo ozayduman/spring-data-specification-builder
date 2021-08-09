@@ -227,6 +227,7 @@ public class SpecificationMappings<T> {
         private final CriteriaDTO criteriaDTO;
         private final Map<String, SingularAttribute<?, ? extends Comparable<?>>> dtoEntityMapping = new HashMap<>();
         private final Map<String, Joinable> dtoJoinMappings = new HashMap<>();
+        private final List<CompoundOperation> compoundOperations = new ArrayList<>();
 
         private SpecificationBuilder(CriteriaDTO criteriaDTO) {
             this.criteriaDTO = criteriaDTO;
@@ -482,6 +483,11 @@ public class SpecificationMappings<T> {
             dtoJoinMappings.put(dtoProperty, Joinable.join(joinAttributes));
         }
 
+        public SpecificationBuilder<T> compound(CompoundOperation operation) {
+            compoundOperations.add(operation);
+            return this;
+        }
+
         /**
          * builds a {@code Specification} from this {@code SpecificationBuilder}
          *
@@ -490,6 +496,16 @@ public class SpecificationMappings<T> {
         public Specification<T> build() {
             final SpecificationMappings<T> specificationMapper = new SpecificationMappings<>(criteriaDTO, dtoEntityMapping, dtoJoinMappings);
             return specificationMapper.createSpecification();
+        }
+    }
+
+    public interface CompoundOperation{
+
+        class ${
+            public static CompoundOperation or(SingularAttribute<?,?> singularAttribute1,
+                                               SingularAttribute<?,?> singularAttribute2){
+                return null;
+            }
         }
     }
 }
